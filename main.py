@@ -15,7 +15,7 @@ from networks import *
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR-10 Training')
 parser.add_argument('--lr', default=0.1, type=float, help='learning_rate')
-parser.add_argument('--gpu_ids', nargs='+', type=int, default=[1, 2])
+parser.add_argument('--gpu_ids', nargs='+', type=int, default=[0, 1, 2])
 parser.add_argument('--net_type', default='wide-resnet', type=str, help='model')
 parser.add_argument('--depth', default=28, type=int, help='depth of model')
 parser.add_argument('--widen_factor', default=10, type=int, help='width of model')
@@ -117,7 +117,7 @@ def test_only(testloader):
     with torch.no_grad():
         for batch_idx, (inputs, targets) in enumerate(testloader):
             inputs, targets = inputs.to(device), targets.to(device)
-            outputs = net(inputs)
+            outputs = model(inputs)
 
             _, predicted = torch.max(outputs.data, 1)
             total += targets.size(0)
@@ -207,7 +207,7 @@ def test(epoch, model, testloader, criterion, file_name):
         if acc > best_acc:
             print('| Saving Best model...\t\t\tTop1 = %.2f%%' % acc)
             state = {
-                    'net': net.module if use_cuda_parallel else net,
+                    'net': model.module if use_cuda_parallel else model,
                     'acc': acc,
                     'epoch': epoch,
             }
