@@ -23,6 +23,7 @@ parser.add_argument('--dropout', default=0.3, type=float, help='dropout_rate')
 parser.add_argument('--dataset', default='cifar10', type=str, help='dataset = [cifar10/cifar100]')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
 parser.add_argument('--testOnly', '-t', action='store_true', help='Test mode with the saved model')
+parser.add_argument('--seed', type=int, default=3333)
 args = parser.parse_args()
 
 # Hyper Parameter settings
@@ -32,6 +33,13 @@ device = f"cuda:{args.gpu_ids[0]}" if use_cuda and args.gpu_ids else "cpu"
 
 best_acc = 0
 start_epoch, num_epochs = cf.start_epoch, cf.num_epochs
+
+print(f"pid     : {os.getpid()}")
+print(f"device  : {device}")
+print(f"use_cuda: {use_cuda}")
+print(f"use_cuda_parallel: {use_cuda_parallel}")
+print(f"torch.manual_seed({args.seed})")
+torch.manual_seed(args.seed)  # Set the random seed manually for reproducibility.
 
 # Data Preparation
 def get_data_loader():
